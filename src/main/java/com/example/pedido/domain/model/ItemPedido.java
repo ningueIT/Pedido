@@ -1,6 +1,7 @@
 package com.example.pedido.domain.model;
 
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -24,17 +25,79 @@ public class ItemPedido {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    public Long getId() { return id; }
+    protected ItemPedido() {
+    }
 
-    public Pedido getPedido() { return pedido; }
-    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public ItemPedido(String nomeProduto, Integer quantidade, BigDecimal preco) {
+        validar(nomeProduto, quantidade, preco);
+        this.nomeProduto = nomeProduto;
+        this.quantidade = quantidade;
+        this.preco = preco;
+    }
 
-    public Integer getQuantidade() { return quantidade; }
-    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
+    public static ItemPedido novoItem(String nomeProduto, Integer quantidade, BigDecimal preco) {
+        return new ItemPedido(nomeProduto, quantidade, preco);
+    }
 
-    public String getNomeProduto() { return nomeProduto; }
-    public void setNomeProduto(String nomeProduto) { this.nomeProduto = nomeProduto; }
+    public BigDecimal calcularSubtotal() {
+        return preco.multiply(BigDecimal.valueOf(quantidade));
+    }
 
-    public BigDecimal getPreco() { return preco; }
-    public void setPreco(BigDecimal preco) { this.preco = preco; }
+    public void associarAoPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public void alterarQuantidade(Integer quantidade) {
+        validarQuantidade(quantidade);
+        this.quantidade = quantidade;
+    }
+
+    public void alterarPreco(BigDecimal preco) {
+        validarPreco(preco);
+        this.preco = preco;
+    }
+
+    private void validar(String nomeProduto, Integer quantidade, BigDecimal preco) {
+        validarNomeProduto(nomeProduto);
+        validarQuantidade(quantidade);
+        validarPreco(preco);
+    }
+
+    private void validarNomeProduto(String nomeProduto) {
+        if (nomeProduto == null || nomeProduto.isBlank()) {
+            throw new IllegalArgumentException("nomeProduto é obrigatório.");
+        }
+    }
+
+    private void validarQuantidade(Integer quantidade) {
+        if (quantidade == null || quantidade <= 0) {
+            throw new IllegalArgumentException("quantidade deve ser maior que zero.");
+        }
+    }
+
+    private void validarPreco(BigDecimal preco) {
+        if (preco == null || preco.signum() <= 0) {
+            throw new IllegalArgumentException("preco deve ser maior que zero.");
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
 }

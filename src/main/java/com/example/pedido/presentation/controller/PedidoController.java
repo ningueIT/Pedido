@@ -5,6 +5,7 @@ import com.example.pedido.application.useCase.CriarNovoPedidoUseCase;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.presentation.dto.CriarNovoPedidoRequest;
 import com.example.pedido.presentation.dto.PedidoResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,13 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<PedidoResponse> criar(@RequestBody CriarNovoPedidoRequest request) {
+    public ResponseEntity<PedidoResponse> criar(@Valid @RequestBody CriarNovoPedidoRequest request) {
         CriarNovoPedidoCommand command = new CriarNovoPedidoCommand(
                 request.itens().stream()
-                        .map(i -> new CriarNovoPedidoCommand.Item(
-                                i.nomeProduto(),
-                                i.quantidade(),
-                                i.preco()
+                        .map(item -> new CriarNovoPedidoCommand.Item(
+                                item.nomeProduto(),
+                                item.quantidade(),
+                                item.preco()
                         ))
                         .collect(Collectors.toList())
         );
