@@ -10,5 +10,6 @@ public record CriarNovoPedidoCommand(
             String nomeProduto,
             Integer quantidade,
             BigDecimal preco
-    ) {}
+    ) {
+    }
 }

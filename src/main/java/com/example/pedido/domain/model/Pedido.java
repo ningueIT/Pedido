@@ -30,12 +30,12 @@ public class Pedido {
     private List<ItemPedido> itens = new ArrayList<>();
 
     protected Pedido() {
+        // Construtor protegido para o JPA
     }
 
-    public Pedido(StatusPedido status) {
+    private Pedido(StatusPedido status) {
         this.status = status;
         this.valorTotal = BigDecimal.ZERO;
-        this.itens = new ArrayList<>();
     }
 
     public static Pedido novoPedido() {
@@ -80,7 +80,7 @@ public class Pedido {
         recalcularValorTotal();
     }
 
-    public void recalcularValorTotal() {
+    private void recalcularValorTotal() {
         this.valorTotal = this.itens.stream()
                 .map(ItemPedido::calcularSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -112,17 +112,5 @@ public class Pedido {
 
     public List<ItemPedido> getItens() {
         return Collections.unmodifiableList(itens);
-    }
-
-    public void setItens(List<ItemPedido> itens) {
-        this.itens.clear();
-
-        if (itens != null) {
-            for (ItemPedido item : itens) {
-                adicionarItem(item);
-            }
-        } else {
-            this.valorTotal = BigDecimal.ZERO;
-        }
     }
 }

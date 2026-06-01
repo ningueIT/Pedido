@@ -26,9 +26,10 @@ public class ItemPedido {
     private BigDecimal preco;
 
     protected ItemPedido() {
+        // Construtor protegido para o JPA
     }
 
-    public ItemPedido(String nomeProduto, Integer quantidade, BigDecimal preco) {
+    private ItemPedido(String nomeProduto, Integer quantidade, BigDecimal preco) {
         validar(nomeProduto, quantidade, preco);
         this.nomeProduto = nomeProduto;
         this.quantidade = quantidade;
