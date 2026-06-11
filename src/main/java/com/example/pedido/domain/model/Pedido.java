@@ -90,6 +90,14 @@ public class Pedido {
         return !this.itens.isEmpty();
     }
 
+    public void atualizarStatus(StatusPedido novoStatus) {
+        if (novoStatus == null) {
+            throw new IllegalArgumentException("Status do pedido não pode ser nulo.");
+        }
+
+        this.status = novoStatus;
+    }
+
     public Long getId() {
         return id;
     }

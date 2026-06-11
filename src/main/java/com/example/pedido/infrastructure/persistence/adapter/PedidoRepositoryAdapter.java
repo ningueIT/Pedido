@@ -5,6 +5,9 @@ import com.example.pedido.domain.repository.PedidoRepository;
 import com.example.pedido.infrastructure.persistence.jpa.PedidoJpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class PedidoRepositoryAdapter implements PedidoRepository {
 
@@ -12,6 +15,16 @@ public class PedidoRepositoryAdapter implements PedidoRepository {
 
     public PedidoRepositoryAdapter(PedidoJpaRepository pedidoJpaRepository) {
         this.pedidoJpaRepository = pedidoJpaRepository;
+    }
+
+    @Override
+    public List<Pedido> buscarTodos() {
+        return pedidoJpaRepository.findAll();
+    }
+
+    @Override
+    public Optional<Pedido> buscarPorId(Long id) {
+        return pedidoJpaRepository.findById(id);
     }
 
     @Override
