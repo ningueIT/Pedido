@@ -1,7 +1,7 @@
 package com.example.pedido.presentation.exception;
 
 import com.example.pedido.application.exception.BusinessException;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.pedido.application.exception.PedidoNaoEncontradoException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +46,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(
-            EntityNotFoundException ex,
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    public ResponseEntity<ApiErrorResponse> handlePedidoNaoEncontradoException(
+            PedidoNaoEncontradoException ex,
             HttpServletRequest request
     ) {
         ApiErrorResponse response = new ApiErrorResponse(
@@ -101,6 +101,25 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalStateException(
+            IllegalStateException ex,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(),
+                ErrorCode.BUSINESS_RULE_VIOLATION.name(),
+                "Operação inválida.",
+                List.of(ex.getMessage()),
+                request.getRequestURI(),
+                TraceIdGenerator.getOrGenerate(request)
+        );
+
+        return ResponseEntity.unprocessableEntity().body(response);
     }
 
     @ExceptionHandler(Exception.class)

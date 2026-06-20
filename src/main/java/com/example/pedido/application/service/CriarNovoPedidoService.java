@@ -2,7 +2,7 @@ package com.example.pedido.application.service;
 
 import com.example.pedido.application.dto.CriarNovoPedidoCommand;
 import com.example.pedido.application.exception.BusinessException;
-import com.example.pedido.application.useCase.CriarNovoPedidoUseCase;
+import com.example.pedido.application.usecase.CriarNovoPedidoUseCase;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.domain.repository.PedidoRepository;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,11 @@ public class CriarNovoPedidoService implements CriarNovoPedidoUseCase {
             throw new BusinessException("Comando de criação do pedido não pode ser nulo.");
         }
 
-        Pedido pedido = Pedido.novoPedido();
-
         if (command.itens() == null || command.itens().isEmpty()) {
             throw new BusinessException("Pedido deve possuir ao menos um item.");
         }
+
+        Pedido pedido = Pedido.novoPedido();
 
         for (CriarNovoPedidoCommand.Item item : command.itens()) {
             pedido.adicionarItem(
@@ -38,9 +38,6 @@ public class CriarNovoPedidoService implements CriarNovoPedidoUseCase {
             );
         }
 
-        if (!pedido.possuiItens()) {
-            throw new BusinessException("Pedido deve possuir ao menos um item válido.");
-        }
 
         return pedidoRepository.salvar(pedido);
     }

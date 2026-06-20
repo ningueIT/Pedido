@@ -1,12 +1,11 @@
-package com.example.pedido.application.useCase;
+package com.example.pedido.application.usecase;
 
 import com.example.pedido.domain.model.Pedido;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BuscarPedidosUseCase {
-    List<Pedido> buscarTodos();
+    Page<Pedido> buscarTodos(Pageable pageable);
 
     Pedido buscarPorId(Long id);
 }
-

@@ -44,7 +44,7 @@ public class ItemPedido {
         return preco.multiply(BigDecimal.valueOf(quantidade));
     }
 
-    public void associarAoPedido(Pedido pedido) {
+    void associarAoPedido(Pedido pedido) {
         this.pedido = pedido;
     }
 

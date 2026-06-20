@@ -3,9 +3,9 @@ package com.example.pedido.infrastructure.persistence.adapter;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.domain.repository.PedidoRepository;
 import com.example.pedido.infrastructure.persistence.jpa.PedidoJpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,8 +18,8 @@ public class PedidoRepositoryAdapter implements PedidoRepository {
     }
 
     @Override
-    public List<Pedido> buscarTodos() {
-        return pedidoJpaRepository.findAll();
+    public Page<Pedido> buscarTodos(Pageable pageable) {
+        return pedidoJpaRepository.findAll(pageable);
     }
 
     @Override

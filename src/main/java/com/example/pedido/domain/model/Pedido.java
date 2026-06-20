@@ -56,10 +56,10 @@ public class Pedido {
     }
 
     public void adicionarItem(ItemPedido item) {
+        validarPedidoModificavel();
         if (item == null) {
             throw new IllegalArgumentException("Item do pedido não pode ser nulo.");
         }
-
         item.associarAoPedido(this);
         this.itens.add(item);
         recalcularValorTotal();
@@ -71,10 +71,10 @@ public class Pedido {
     }
 
     public void removerItem(ItemPedido item) {
+        validarPedidoModificavel();
         if (item == null) {
             return;
         }
-
         this.itens.remove(item);
         item.associarAoPedido(null);
         recalcularValorTotal();
@@ -94,8 +94,18 @@ public class Pedido {
         if (novoStatus == null) {
             throw new IllegalArgumentException("Status do pedido não pode ser nulo.");
         }
-
+        if (!this.status.podeTransitarPara(novoStatus)) {
+            throw new IllegalStateException(
+                    "Transição de status inválida: " + this.status + " → " + novoStatus + ".");
+        }
         this.status = novoStatus;
+    }
+
+    private void validarPedidoModificavel() {
+        if (this.status == StatusPedido.ENTREGUE || this.status == StatusPedido.CANCELADO) {
+            throw new IllegalStateException(
+                    "Não é possível modificar um pedido com status " + this.status + ".");
+        }
     }
 
     public Long getId() {
@@ -108,10 +118,6 @@ public class Pedido {
 
     public StatusPedido getStatus() {
         return status;
-    }
-
-    public void setStatus(StatusPedido status) {
-        this.status = status;
     }
 
     public BigDecimal getValorTotal() {

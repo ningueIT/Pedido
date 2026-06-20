@@ -1,13 +1,12 @@
 package com.example.pedido.domain.repository;
 
 import com.example.pedido.domain.model.Pedido;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
-
 public interface PedidoRepository {
-    List<Pedido> buscarTodos();
+    Page<Pedido> buscarTodos(Pageable pageable);
 
     Optional<Pedido> buscarPorId(Long id);
 

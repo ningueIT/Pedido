@@ -1,8 +1,8 @@
 package com.example.pedido.presentation.controller;
 
-import com.example.pedido.application.useCase.AtualizarStatusPedidoUseCase;
-import com.example.pedido.application.useCase.BuscarPedidosUseCase;
-import com.example.pedido.application.useCase.CriarNovoPedidoUseCase;
+import com.example.pedido.application.usecase.AtualizarStatusPedidoUseCase;
+import com.example.pedido.application.usecase.BuscarPedidosUseCase;
+import com.example.pedido.application.usecase.CriarNovoPedidoUseCase;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.domain.model.StatusPedido;
 import org.junit.jupiter.api.Test;

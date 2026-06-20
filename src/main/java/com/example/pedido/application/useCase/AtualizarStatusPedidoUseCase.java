@@ -1,4 +1,4 @@
-package com.example.pedido.application.useCase;
+package com.example.pedido.application.usecase;
 
 import com.example.pedido.domain.model.Pedido;
 

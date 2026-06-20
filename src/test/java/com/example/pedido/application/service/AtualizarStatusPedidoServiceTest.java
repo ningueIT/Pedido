@@ -1,9 +1,9 @@
 package com.example.pedido.application.service;
 
+import com.example.pedido.application.exception.PedidoNaoEncontradoException;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.domain.model.StatusPedido;
 import com.example.pedido.domain.repository.PedidoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,14 +47,14 @@ class AtualizarStatusPedidoServiceTest {
     }
 
     @Test
-    void deveLancarEntityNotFoundExceptionQuandoPedidoNaoExistir() {
+    void deveLancarPedidoNaoEncontradoExceptionQuandoPedidoNaoExistir() {
         Long id = 99L;
 
         when(pedidoRepository.buscarPorId(id)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> atualizarStatusPedidoService.executar(id, "ENTREGUE"))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("Pedido não encontrado");
+        assertThatThrownBy(() -> atualizarStatusPedidoService.executar(id, "CONFIRMADO"))
+                .isInstanceOf(PedidoNaoEncontradoException.class)
+                .hasMessageContaining("Pedido não encontrado");
 
         verify(pedidoRepository).buscarPorId(id);
     }
@@ -72,5 +72,19 @@ class AtualizarStatusPedidoServiceTest {
 
         verify(pedidoRepository).buscarPorId(id);
     }
-}
 
+    @Test
+    void deveLancarIllegalStateExceptionParaTransicaoDeStatusInvalida() {
+        Long id = 1L;
+        Pedido pedido = Pedido.novoPedido(); // CRIADO
+
+        when(pedidoRepository.buscarPorId(id)).thenReturn(Optional.of(pedido));
+
+        // CRIADO → ENTREGUE é uma transição inválida
+        assertThatThrownBy(() -> atualizarStatusPedidoService.executar(id, "ENTREGUE"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Transição de status inválida");
+
+        verify(pedidoRepository).buscarPorId(id);
+    }
+}

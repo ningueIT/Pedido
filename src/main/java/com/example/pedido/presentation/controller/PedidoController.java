@@ -1,19 +1,21 @@
 package com.example.pedido.presentation.controller;
 
 import com.example.pedido.application.dto.CriarNovoPedidoCommand;
-import com.example.pedido.application.useCase.AtualizarStatusPedidoUseCase;
-import com.example.pedido.application.useCase.BuscarPedidosUseCase;
-import com.example.pedido.application.useCase.CriarNovoPedidoUseCase;
+import com.example.pedido.application.usecase.AtualizarStatusPedidoUseCase;
+import com.example.pedido.application.usecase.BuscarPedidosUseCase;
+import com.example.pedido.application.usecase.CriarNovoPedidoUseCase;
 import com.example.pedido.domain.model.Pedido;
 import com.example.pedido.presentation.dto.AtualizarStatusRequest;
 import com.example.pedido.presentation.dto.CriarNovoPedidoRequest;
 import com.example.pedido.presentation.dto.PedidoResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -34,11 +36,11 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PedidoResponse>> listarTodos() {
-        List<PedidoResponse> pedidos = buscarPedidosUseCase.buscarTodos().stream()
-                .map(PedidoResponse::from)
-                .toList();
-
+    public ResponseEntity<Page<PedidoResponse>> listarTodos(
+            @PageableDefault(size = 20, sort = "id") Pageable pageable
+    ) {
+        Page<PedidoResponse> pedidos = buscarPedidosUseCase.buscarTodos(pageable)
+                .map(PedidoResponse::from);
         return ResponseEntity.ok(pedidos);
     }
 
